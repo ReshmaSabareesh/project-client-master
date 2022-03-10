@@ -1,0 +1,13 @@
+.courses {
+  color: aliceblue;
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 2%;
+  margin-top: 10px;
+  flex: 12;
+}
+h2 {
+  color: aliceblue;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
