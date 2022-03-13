@@ -135,19 +135,45 @@ async function displayRazorpay(){
     description: 'Welcome to payment section',
     image : "https://example.com/your_logo",
     order_id: data.id,
-     handler : function (response){
-         alert(response.razorpay_payment_id)
-         alert(response.razorpay_order_id)
-        alert(response.razorpay_signature)
-        alert("payment successfully")
-    },
+    //  handler : function (response){
+    //      const payment_id = response.razorpay_payment_id
+    //      console.log(payment_id)
+    //       alert(response.razorpay_payment_id)
+    //      alert(response.razorpay_order_id)
+    //      alert(response.razorpay_signature)
+    //      alert("payment successfully")
+    // } 
+    handler : async function (response){
+      try{
+        const data = await axios.post('http://localhost:5000/verify',response)
+        console.log(data);
+      }
+       catch(error){
+          console.log(error);
+    }
+      // const payment_id = response.razorpay_payment_id
+      // console.log(payment_id)
+      //  alert(response.razorpay_payment_id)
+      //  alert(response.razorpay_order_id)
+      // alert(response.razorpay_signature)
+      // alert("payment successfully")
+  },
      prefill: {
         name,
     //    phone:phone,
     //    email:email
-    }
-    
-}
+    }};
+    const rzp1 = new Razorpay(options);
+    rzp1.on('payment.failed', function (response){
+            alert(response.error.code);
+            alert(response.error.description);
+            alert(response.error.source);
+            alert(response.error.step);
+            alert(response.error.reason);
+            alert(response.error.metadata.order_id);
+            alert(response.error.metadata.payment_id);
+    }); 
+
 
 const paymentObject = new window.Razorpay(options);
 paymentObject.open()

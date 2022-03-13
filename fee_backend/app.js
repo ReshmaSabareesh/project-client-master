@@ -3,9 +3,9 @@ const path =require("path");
 const shortid = require("shortid");
 const cors = require("cors");
 const Razorpay = require("razorpay");
-const { json } = require('express')
+const { json } = require("express");
 const bodyParser = require("body-parser");
-
+const crypto = require('crypto');
 //middlewares
 app.use(cors());
 app.use(bodyParser.json());
@@ -85,14 +85,18 @@ app.post("/verify", async (req, res) => {
 	try {
 		const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
 			req.body;
+         const key_secret = 'oI1QjefrCWKtD8701NCtoBxR';
 		const sign = razorpay_order_id + "|" + razorpay_payment_id;
 		const expectedSign = crypto
-			.createHmac("sha256", process.env.KEY_SECRET)
+			.createHmac("sha256",key_secret)
 			.update(sign.toString())
 			.digest("hex");
 
 		if (razorpay_signature === expectedSign) {
-			return res.status(200).json({ message: "Payment verified successfully" });
+         console.log('Payment verified successfully')
+         require('fs').writeFileSync('payment.json',JSON.stringify(req.body,null,4))
+			return res.status(200).json({ message: "Payment verified successfully"});
+         
 		} else {
 			return res.status(400).json({ message: "Invalid signature sent!" });
 		}
